@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { Blog } from '@prisma/client';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
@@ -13,6 +6,7 @@ import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { Param, Patch } from '@nestjs/common';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+import { Delete, HttpCode, HttpStatus } from '@nestjs/common';
 interface JwtPayload {
   sub: string;
   email: string;
@@ -42,5 +36,16 @@ export class BlogsController {
     @Body() dto: UpdateBlogDto,
   ): Promise<Blog> {
     return this.blogsService.updateBlog(user.sub, id, dto);
+  }
+
+  // Blogs Delete
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async delete(
+    @GetUser() user: JwtPayload,
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.blogsService.deleteBlog(user.sub, id);
   }
 }

@@ -89,4 +89,23 @@ export class BlogsService {
       throw error;
     }
   }
+
+  // Delete Blog
+  public async deleteBlog(userId: string, blogId: string): Promise<void> {
+    const existingBlog = await this.prisma.blog.findUnique({
+      where: { id: blogId },
+    });
+
+    if (!existingBlog) {
+      throw new NotFoundException('Blog not found');
+    }
+
+    if (existingBlog.userId !== userId) {
+      throw new ForbiddenException('You do not own this blog');
+    }
+
+    await this.prisma.blog.delete({
+      where: { id: blogId },
+    });
+  }
 }
