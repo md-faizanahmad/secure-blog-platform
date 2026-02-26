@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { PublicModule } from './public/public.module';
 import { LikesModule } from './likes/likes.module';
+import { CommentsModule } from './comments/comments.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -15,6 +16,7 @@ import { LikesModule } from './likes/likes.module';
     BlogsModule,
     PublicModule,
     LikesModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}
