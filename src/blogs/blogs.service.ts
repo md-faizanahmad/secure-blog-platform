@@ -5,9 +5,18 @@ import { CreateBlogDto } from './dto/create-blog.dto';
 import { generateSlug } from './utils/slug.util';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+
 @Injectable()
 export class BlogsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Get Blogs
+  public async getMyBlogs(userId: string): Promise<Blog[]> {
+    return this.prisma.blog.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
   //   CreateBlog
   public async createBlog(userId: string, dto: CreateBlogDto): Promise<Blog> {
