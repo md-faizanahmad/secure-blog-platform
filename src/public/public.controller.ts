@@ -3,6 +3,7 @@ import { PublicService } from './public.service';
 import { PublicBlogResponse } from './types/public-blog-response.type';
 import { Query } from '@nestjs/common';
 import { PublicFeedResponse } from './types/public-feed-response.type';
+import { FeedQueryDto } from './dto/feed-query.dto';
 @Controller('public')
 export class PublicController {
   constructor(private readonly publicService: PublicService) {}
@@ -18,9 +19,8 @@ export class PublicController {
   // public feed with pagination rate limit
   @Get('feed')
   public async getFeed(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
+    @Query() query: FeedQueryDto,
   ): Promise<PublicFeedResponse> {
-    return this.publicService.getFeed(page, limit);
+    return this.publicService.getFeed(query.page, query.limit);
   }
 }
