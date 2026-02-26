@@ -18,12 +18,9 @@ export class PublicController {
   // public feed with pagination rate limit
   @Get('feed')
   public async getFeed(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
   ): Promise<PublicFeedResponse> {
-    const parsedPage: number = Number(page) || 1;
-    const parsedLimit: number = Number(limit) || 10;
-
-    return this.publicService.getFeed(parsedPage, parsedLimit);
+    return this.publicService.getFeed(page, limit);
   }
 }
