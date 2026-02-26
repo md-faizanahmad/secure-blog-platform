@@ -1,98 +1,286 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+🔐Secure Blog Platform – Backend
+Production-ready backend for a Secure Blog Platform built using:
+NestJS (latest stable)
+TypeScript (strict mode enabled)
+PostgreSQL
+Prisma ORM
+JWT Authentication
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This backend implements authentication, private blog management, public blog access, public feed with aggregation, like system, and comment system with clean architecture and proper security practices.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+🚀 Setup Instructions:
 
-## Description
+1️⃣ Clone Repository
+git clone <your-repo-url>
+cd backend
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+2️⃣ Install Dependencies
+npm install
 
-## Project setup
+3️⃣ Environment Variables
 
-```bash
-$ npm install
-```
+Create .env file in project root:
 
-## Compile and run the project
+DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=your_secure_secret_key
 
-```bash
-# development
-$ npm run start
+4️⃣ Run Prisma Migration
+npx prisma migrate dev
 
-# watch mode
-$ npm run start:dev
+This will:
+Create database tables
+Apply constraints
+Generate Prisma client
 
-# production mode
-$ npm run start:prod
-```
+5️⃣ Start Development Server
+npm run start:dev
 
-## Run tests
+Server runs at:
 
-```bash
-# unit tests
-$ npm run test
+http://localhost:3000
 
-# e2e tests
-$ npm run test:e2e
+🏗 Architecture Explanation
 
-# test coverage
-$ npm run test:cov
-```
+1️⃣ Modular Feature-Based Structure
 
-## Deployment
+Each domain is isolated into its own module:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+src/
+├── auth/
+├── users/
+├── blogs/
+├── public/
+├── likes/
+├── comments/
+├── prisma/
+├── common/
+└── main.ts
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Each module contains:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+Controller (HTTP layer)
+Service (business logic)
+DTOs (validation)
+Types (response contracts)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+This ensures:
+Clear separation of concerns
+Scalability
+Maintainability
+Testability
 
-## Resources
+2️⃣ Layer Responsibilities
 
-Check out a few resources that may come in handy when working with NestJS:
+Layer Responsibility
+Controller Handles HTTP layer, guards, request mapping
+Service Business logic and DB interaction
+Prisma Database abstraction
+DTOs Input validation
+Types Output contract definitions
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Controllers do not contain business logic.
+All database access happens inside services.
 
-## Support
+3️⃣ Authentication System
+Password hashing using bcrypt
+JWT-based authentication
+Passport JWT strategy
+Guard-protected routes
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+/auth/me implemented using validated JWT payload
 
-## Stay in touch
+Security practices:
+No passwordHash exposure
+Proper 401 handling
+Secure error responses
+JWT secret validated at startup
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+4️⃣ Database Design (Prisma)
 
-## License
+Core Models:
+User
+Blog
+Like
+Comment
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Important Constraints:
+email → unique
+slug → unique
+
+@@unique([userId, blogId]) in Like
+
+blogId indexed in Comment
+Cascade deletes for referential integrity
+Integrity is enforced at database level, not just in code.
+
+5️⃣ Private Blog Management
+
+Authenticated users can:
+Create blog
+Update blog (owner-only)
+Delete blog (owner-only)
+List own blogs
+
+Ownership is validated inside service layer before any mutation.
+
+6️⃣ Public Blog Access
+GET /public/blogs/:slug
+
+Features:
+Only published blogs accessible
+Includes author basic info
+Includes like count
+Includes comment count
+Single optimized Prisma query
+Avoids N+1 problem
+
+7️⃣ Public Feed (Optimized)
+GET /public/feed?page=1&limit=10
+
+Features:
+Strict query validation
+Pagination
+Sorted newest first
+
+Includes:
+Author basic info
+Like count
+Comment count
+Uses \_count aggregation
+Uses Prisma $transaction
+Avoids N+1 queries
+Limit capped for safety
+
+8️⃣ Like System
+
+Auth required
+DB-level unique constraint prevents duplicate likes
+Composite unique key (userId_blogId)
+Returns updated like count
+
+9️⃣ Comment System
+
+Auth required for creation
+Sorted newest first
+Indexed query by blogId
+Includes author info
+Clean response shape
+No sensitive data exposed
+
+🔐 Security Practices
+
+Global validation pipe
+whitelist enabled
+forbidNonWhitelisted enabled
+transform enabled
+Strict DTO validation
+Ownership enforcement
+Proper HTTP status codes
+No sensitive data exposure
+DB constraints for integrity
+
+⚖ Tradeoffs Made
+Offset-based pagination instead of cursor-based
+Simpler implementation
+Good for moderate dataset size
+Cursor pagination preferred for very large datasets
+No refresh tokens
+JWT access token only
+Simpler auth flow
+Could be extended for production-grade auth
+No background jobs
+No async summary generation
+Could add queue system later (BullMQ / Redis)
+No rate limiting
+Not implemented to keep scope aligned with core requirements
+Hard deletes
+No soft delete mechanism
+Could be added for audit requirements
+Focus was correctness, clean architecture, and security over feature expansion.
+
+🔧 What I Would Improve
+
+Implement cursor-based pagination
+Add rate limiting (authentication + public feed)
+Add structured logging (Pino)
+Introduce refresh token rotation
+Add Redis caching for public feed
+Implement soft deletes with audit trails
+
+Add E2E tests
+Add OpenAPI documentation (Swagger)
+Introduce role-based access system
+Add CI/CD pipeline with automated linting & testing
+
+📈 How I Would Scale to 1M Users
+
+1️⃣ Database Scaling
+
+Use read replicas
+Partition large tables
+Introduce proper indexing strategy
+Move to cursor pagination
+
+2️⃣ Caching Layer
+
+Redis for:
+Public feed
+Blog details
+Like counts
+
+3️⃣ Horizontal Scaling
+
+Stateless authentication using JWT
+Deploy multiple backend instances behind load balancer
+
+4️⃣ CDN
+
+Cache public blog responses at CDN level
+
+5️⃣ Async Processing
+
+Use queue system (BullMQ + Redis)
+Move heavy operations to background workers
+
+6️⃣ Observability
+
+Structured logging
+Centralized log aggregation
+Metrics & monitoring (Prometheus + Grafana)
+
+📦 API Endpoints
+Authentication
+
+POST /auth/register
+POST /auth/login
+GET /auth/me
+
+Private Blogs
+POST /blogs
+PATCH /blogs/:id
+DELETE /blogs/:id
+GET /blogs/my
+
+Public
+GET /public/blogs/:slug
+GET /public/feed
+
+Likes
+POST /blogs/:id/like
+DELETE /blogs/:id/like
+
+Comments
+POST /blogs/:id/comments
+GET /blogs/:id/comments
+
+🧠 Design Philosophy
+
+This backend prioritizes:
+Clean architecture
+Strict TypeScript typing
+Database-level integrity
+Clear separation of concerns
+Secure API design
+Optimized queries
+No unnecessary overengineering
+The focus was correctness, structure, and scalability readiness.
