@@ -11,7 +11,8 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
-
+import { Param, Patch } from '@nestjs/common';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 interface JwtPayload {
   sub: string;
   email: string;
@@ -21,6 +22,7 @@ interface JwtPayload {
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
 
+  // Blogs Post
   @Post()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
@@ -29,5 +31,16 @@ export class BlogsController {
     @Body() dto: CreateBlogDto,
   ): Promise<Blog> {
     return this.blogsService.createBlog(user.sub, dto);
+  }
+
+  // Blogs Update
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  public async update(
+    @GetUser() user: JwtPayload,
+    @Param('id') id: string,
+    @Body() dto: UpdateBlogDto,
+  ): Promise<Blog> {
+    return this.blogsService.updateBlog(user.sub, id, dto);
   }
 }
