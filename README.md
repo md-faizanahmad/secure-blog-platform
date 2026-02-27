@@ -1,51 +1,62 @@
-🔐Secure Blog Platform – Backend
+<h1>🔐 Secure Blog Platform – Backend</h1>
+
+<p>
 Production-ready backend for a Secure Blog Platform built using:
-NestJS (latest stable)
-TypeScript (strict mode enabled)
-PostgreSQL
-Prisma ORM
-JWT Authentication
+</p>
 
-This backend implements authentication, private blog management, public blog access, public feed with aggregation, like system, and comment system with clean architecture and proper security practices.
+<ul>
+  <li><strong>NestJS</strong> (latest stable)</li>
+  <li><strong>TypeScript</strong> (strict mode enabled)</li>
+  <li><strong>PostgreSQL</strong></li>
+  <li><strong>Prisma ORM</strong></li>
+  <li><strong>JWT Authentication</strong></li>
+</ul>
 
-🚀 Setup Instructions:
+<p>
+This backend implements authentication, private blog management, public blog access, an optimized public feed, like system, and comment system with clean architecture and strong security practices.
+</p>
 
-1️⃣ Clone Repository
-git clone <your-repo-url>
-cd backend
+<hr />
 
-2️⃣ Install Dependencies
-npm install
+<h2>🚀 Setup Instructions</h2>
 
-3️⃣ Environment Variables
+<h3>1️⃣ Clone Repository</h3>
+<pre><code>git clone &lt;your-repo-url&gt;
+cd backend</code></pre>
 
-Create .env file in project root:
+<h3>2️⃣ Install Dependencies</h3>
+<pre><code>npm install</code></pre>
 
-DATABASE_URL=your_postgres_connection_string
-JWT_SECRET=your_secure_secret_key
+<h3>3️⃣ Environment Variables</h3>
 
-4️⃣ Run Prisma Migration
-npx prisma migrate dev
+<p>Create a <code>.env</code> file in the project root:</p>
 
-This will:
-Create database tables
-Apply constraints
-Generate Prisma client
+<pre><code>DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=your_secure_secret_key</code></pre>
 
-5️⃣ Start Development Server
-npm run start:dev
+<h3>4️⃣ Run Prisma Migration</h3>
+<pre><code>npx prisma migrate dev</code></pre>
 
-Server runs at:
+<p>This will:</p>
+<ul>
+  <li>Create database tables</li>
+  <li>Apply constraints</li>
+  <li>Generate Prisma Client</li>
+</ul>
 
-http://localhost:3000
+<h3>5️⃣ Start Development Server</h3>
+<pre><code>npm run start:dev</code></pre>
 
-🏗 Architecture Explanation
+<p>Server runs at:</p>
+<pre><code>http://localhost:3000</code></pre>
 
-1️⃣ Modular Feature-Based Structure
+<hr />
 
-Each domain is isolated into its own module:
+<h2>🏗 Architecture Overview</h2>
 
-src/
+<h3>Modular, Feature-Based Structure</h3>
+
+<pre><code>src/
 ├── auth/
 ├── users/
 ├── blogs/
@@ -54,233 +65,248 @@ src/
 ├── comments/
 ├── prisma/
 ├── common/
-└── main.ts
+└── main.ts</code></pre>
 
-Each module contains:
+<p>Each module contains:</p>
+<ul>
+  <li><strong>Controller</strong> – HTTP layer</li>
+  <li><strong>Service</strong> – Business logic</li>
+  <li><strong>DTOs</strong> – Validation layer</li>
+</ul>
 
-Controller (HTTP layer)
-Service (business logic)
-DTOs (validation)
-Types (response contracts)
+<p>
+This structure ensures separation of concerns, scalability, maintainability, and testability.
+</p>
 
-This ensures:
-Clear separation of concerns
-Scalability
-Maintainability
-Testability
+<hr />
 
-2️⃣ Layer Responsibilities
+<h2>🔐 Authentication System</h2>
 
-Layer Responsibility
-Controller Handles HTTP layer, guards, request mapping
-Service Business logic and DB interaction
-Prisma Database abstraction
-DTOs Input validation
-Types Output contract definitions
+<ul>
+  <li>Password hashing using <strong>bcrypt</strong></li>
+  <li>JWT-based authentication</li>
+  <li>Passport JWT strategy</li>
+  <li>Guard-protected routes</li>
+  <li><code>/auth/me</code> secured via validated JWT payload</li>
+</ul>
 
-Controllers do not contain business logic.
-All database access happens inside services.
+<p><strong>Security Measures:</strong></p>
+<ul>
+  <li>No passwordHash exposure</li>
+  <li>Proper 401 handling</li>
+  <li>Strict DTO validation</li>
+  <li>JWT secret loaded from environment variables</li>
+</ul>
 
-3️⃣ Authentication System
-Password hashing using bcrypt
-JWT-based authentication
-Passport JWT strategy
-Guard-protected routes
+<hr />
 
-/auth/me implemented using validated JWT payload
+<h2>🗄 Database Design (Prisma)</h2>
 
-Security practices:
-No passwordHash exposure
-Proper 401 handling
-Secure error responses
-JWT secret validated at startup
+<p><strong>Core Models:</strong></p>
+<ul>
+  <li>User</li>
+  <li>Blog</li>
+  <li>Like</li>
+  <li>Comment</li>
+</ul>
 
-4️⃣ Database Design (Prisma)
+<p><strong>Key Constraints:</strong></p>
+<ul>
+  <li><code>email</code> – Unique</li>
+  <li><code>slug</code> – Unique</li>
+  <li><code>@@unique([userId, blogId])</code> – Prevent duplicate likes</li>
+  <li>Indexed <code>blogId</code> for optimized comment queries</li>
+  <li>Cascade deletes for referential integrity</li>
+</ul>
 
-Core Models:
-User
-Blog
-Like
-Comment
+<p>
+All integrity rules are enforced at the database level, not just in application logic.
+</p>
 
-Important Constraints:
-email → unique
-slug → unique
+<hr />
 
-@@unique([userId, blogId]) in Like
+<h2>📝 Private Blog Management</h2>
 
-blogId indexed in Comment
-Cascade deletes for referential integrity
-Integrity is enforced at database level, not just in code.
+<p>Authenticated users can:</p>
+<ul>
+  <li>Create blog</li>
+  <li>Update blog (owner-only)</li>
+  <li>Delete blog (owner-only)</li>
+  <li>List own blogs</li>
+</ul>
 
-5️⃣ Private Blog Management
+<p>
+Ownership validation is enforced inside the service layer before any mutation.
+</p>
 
-Authenticated users can:
-Create blog
-Update blog (owner-only)
-Delete blog (owner-only)
-List own blogs
+<hr />
 
-Ownership is validated inside service layer before any mutation.
+<h2>🌍 Public Blog Access</h2>
 
-6️⃣ Public Blog Access
-GET /public/blogs/:slug
+<p><code>GET /public/blogs/:slug</code></p>
 
-Features:
-Only published blogs accessible
-Includes author basic info
-Includes like count
-Includes comment count
-Single optimized Prisma query
-Avoids N+1 problem
+<ul>
+  <li>Only published blogs accessible</li>
+  <li>Includes author basic information</li>
+  <li>Includes like count</li>
+  <li>Includes comment count</li>
+  <li>Optimized Prisma query</li>
+  <li>No N+1 query problem</li>
+</ul>
 
-7️⃣ Public Feed (Optimized)
-GET /public/feed?page=1&limit=10
+<hr />
 
-Features:
-Strict query validation
-Pagination
-Sorted newest first
+<h2>📢 Public Feed</h2>
 
-Includes:
-Author basic info
-Like count
-Comment count
-Uses \_count aggregation
-Uses Prisma $transaction
-Avoids N+1 queries
-Limit capped for safety
+<p><code>GET /public/feed?page=1&limit=10</code></p>
 
-8️⃣ Like System
+<ul>
+  <li>Pagination enabled</li>
+  <li>Sorted newest first</li>
+  <li>Includes author info</li>
+  <li>Includes like & comment counts</li>
+  <li>Uses Prisma aggregation (<code>_count</code>)</li>
+  <li>Optimized query strategy</li>
+</ul>
 
-Auth required
-DB-level unique constraint prevents duplicate likes
-Composite unique key (userId_blogId)
-Returns updated like count
+<hr />
 
-9️⃣ Comment System
+<h2>❤️ Like System</h2>
 
-Auth required for creation
-Sorted newest first
-Indexed query by blogId
-Includes author info
-Clean response shape
-No sensitive data exposed
+<ul>
+  <li>Authentication required</li>
+  <li>Database-level unique constraint prevents duplicates</li>
+  <li>Composite unique key (<code>userId_blogId</code>)</li>
+  <li>Returns updated like count</li>
+</ul>
 
-🔐 Security Practices
+<hr />
 
-Global validation pipe
-whitelist enabled
-forbidNonWhitelisted enabled
-transform enabled
-Strict DTO validation
-Ownership enforcement
-Proper HTTP status codes
-No sensitive data exposure
-DB constraints for integrity
+<h2>💬 Comment System</h2>
 
-⚖ Tradeoffs Made
-Offset-based pagination instead of cursor-based
-Simpler implementation
-Good for moderate dataset size
-Cursor pagination preferred for very large datasets
-No refresh tokens
-JWT access token only
-Simpler auth flow
-Could be extended for production-grade auth
-No background jobs
-No async summary generation
-Could add queue system later (BullMQ / Redis)
-No rate limiting
-Not implemented to keep scope aligned with core requirements
-Hard deletes
-No soft delete mechanism
-Could be added for audit requirements
-Focus was correctness, clean architecture, and security over feature expansion.
+<ul>
+  <li>Authentication required for creation</li>
+  <li>Sorted newest first</li>
+  <li>Indexed by <code>blogId</code></li>
+  <li>Includes author info</li>
+  <li>No sensitive data exposed</li>
+</ul>
 
-🔧 What I Would Improve
+<hr />
 
-Implement cursor-based pagination
-Add rate limiting (authentication + public feed)
-Add structured logging (Pino)
-Introduce refresh token rotation
-Add Redis caching for public feed
-Implement soft deletes with audit trails
+<h2>🛡 Security Practices</h2>
 
-Add E2E tests
-Add OpenAPI documentation (Swagger)
-Introduce role-based access system
-Add CI/CD pipeline with automated linting & testing
+<ul>
+  <li>Global validation pipe</li>
+  <li>Whitelist & forbidNonWhitelisted enabled</li>
+  <li>Strict DTO validation</li>
+  <li>Ownership enforcement</li>
+  <li>Proper HTTP status codes</li>
+  <li>No sensitive data exposure</li>
+  <li>Database-level constraints</li>
+</ul>
 
-📈 How I Would Scale to 1M Users
+<hr />
 
-1️⃣ Database Scaling
+<h2>⚖ Tradeoffs</h2>
 
-Use read replicas
-Partition large tables
-Introduce proper indexing strategy
-Move to cursor pagination
+<ul>
+  <li>Offset-based pagination instead of cursor-based (simpler implementation)</li>
+  <li>No refresh tokens (kept authentication minimal)</li>
+  <li>No background job processing</li>
+  <li>No rate limiting (focused on core requirements)</li>
+  <li>Hard deletes instead of soft deletes</li>
+</ul>
 
-2️⃣ Caching Layer
+<p>
+The focus was correctness, clean architecture, and security rather than feature expansion.
+</p>
 
-Redis for:
-Public feed
-Blog details
-Like counts
+<hr />
 
-3️⃣ Horizontal Scaling
+<h2>🔧 Future Improvements</h2>
 
-Stateless authentication using JWT
-Deploy multiple backend instances behind load balancer
+<ul>
+  <li>Cursor-based pagination</li>
+  <li>Rate limiting</li>
+  <li>Structured logging</li>
+  <li>Refresh token rotation</li>
+  <li>Redis caching</li>
+  <li>Soft delete mechanism</li>
+  <li>E2E tests</li>
+  <li>Swagger API documentation</li>
+  <li>CI/CD integration</li>
+</ul>
 
-4️⃣ CDN
+<hr />
 
-Cache public blog responses at CDN level
+<h2>📈 Scaling Strategy (1M+ Users)</h2>
 
-5️⃣ Async Processing
+<ul>
+  <li>Read replicas for scaling reads</li>
+  <li>Proper indexing strategy</li>
+  <li>Redis caching layer</li>
+  <li>Stateless backend with horizontal scaling</li>
+  <li>CDN caching for public content</li>
+  <li>Async processing with queue workers</li>
+  <li>Observability & monitoring tools</li>
+</ul>
 
-Use queue system (BullMQ + Redis)
-Move heavy operations to background workers
+<hr />
 
-6️⃣ Observability
+<h2>📦 API Endpoints</h2>
 
-Structured logging
-Centralized log aggregation
-Metrics & monitoring (Prometheus + Grafana)
+<h3>Authentication</h3>
+<ul>
+  <li>POST /auth/register</li>
+  <li>POST /auth/login</li>
+  <li>GET /auth/me</li>
+</ul>
 
-📦 API Endpoints
-Authentication
+<h3>Private Blogs</h3>
+<ul>
+  <li>POST /blogs</li>
+  <li>PATCH /blogs/:id</li>
+  <li>DELETE /blogs/:id</li>
+  <li>GET /blogs/my</li>
+</ul>
 
-POST /auth/register
-POST /auth/login
-GET /auth/me
+<h3>Public</h3>
+<ul>
+  <li>GET /public/blogs/:slug</li>
+  <li>GET /public/feed</li>
+</ul>
 
-Private Blogs
-POST /blogs
-PATCH /blogs/:id
-DELETE /blogs/:id
-GET /blogs/my
+<h3>Likes</h3>
+<ul>
+  <li>POST /blogs/:id/like</li>
+  <li>DELETE /blogs/:id/like</li>
+</ul>
 
-Public
-GET /public/blogs/:slug
-GET /public/feed
+<h3>Comments</h3>
+<ul>
+  <li>POST /blogs/:id/comments</li>
+  <li>GET /blogs/:id/comments</li>
+</ul>
 
-Likes
-POST /blogs/:id/like
-DELETE /blogs/:id/like
+<hr />
 
-Comments
-POST /blogs/:id/comments
-GET /blogs/:id/comments
+<h2>🧠 Design Philosophy</h2>
 
-🧠 Design Philosophy
-
+<p>
 This backend prioritizes:
-Clean architecture
-Strict TypeScript typing
-Database-level integrity
-Clear separation of concerns
-Secure API design
-Optimized queries
-No unnecessary overengineering
-The focus was correctness, structure, and scalability readiness.
+</p>
+
+<ul>
+  <li>Clean modular architecture</li>
+  <li>Strict TypeScript typing</li>
+  <li>Database-level integrity</li>
+  <li>Separation of concerns</li>
+  <li>Secure API design</li>
+  <li>Optimized queries</li>
+  <li>No unnecessary overengineering</li>
+</ul>
+
+<p>
+The primary focus was correctness, structure, and long-term scalability readiness.
+</p>
