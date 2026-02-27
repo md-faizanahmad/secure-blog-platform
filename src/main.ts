@@ -18,7 +18,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://secure-blog-platform-frontend.vercel.app/',
+      'https://secure-blog-platform-frontend.vercel.app',
     ],
     credentials: true,
   });
