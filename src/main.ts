@@ -15,7 +15,13 @@ async function bootstrap(): Promise<void> {
       },
     }),
   );
-
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://secure-blog-platform-frontend.vercel.app/',
+    ],
+    credentials: true,
+  });
   // await app.listen(3000);
   const port: number = Number(process.env.PORT) || 3000;
   await app.listen(port);
