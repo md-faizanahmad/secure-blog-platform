@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Header,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -25,12 +32,22 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  // @Get('me')
+  // @UseGuards(JwtAuthGuard)
+  // public me(@GetUser() user: { sub: string; email: string }): {
+  //   id: string;
+  //   email: string;
+  // } {
+  //   return {
+  //     id: user.sub,
+  //     email: user.email,
+  //   };
+  // }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  public me(@GetUser() user: { sub: string; email: string }): {
-    id: string;
-    email: string;
-  } {
+  @Header('Cache-Control', 'no-store') // 🔥 ADD THIS
+  public me(@GetUser() user: { sub: string; email: string }) {
     return {
       id: user.sub,
       email: user.email,
